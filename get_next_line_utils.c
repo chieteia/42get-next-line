@@ -6,7 +6,7 @@
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 12:57:01 by ntoshihi          #+#    #+#             */
-/*   Updated: 2020/12/11 23:02:57 by ntoshihi         ###   ########.fr       */
+/*   Updated: 2020/12/12 01:06:47 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,12 @@ char	*ft_strjoin(char *s1, char *s2)
 	char	*p;
 	char	*p_top;
 	char	*s1_top;
+	ssize_t	total_len;
 
 	if (!s1 && !s2)
 		return (NULL);
-	if (!(p = (char *)malloc(sizeof(char)*(ft_strlen(s1) + ft_strlen(s2) + 1))))
+	total_len = ft_strlen(s1) + ft_strlen(s2);
+	if (!(p = (char *)malloc(sizeof(char) * (total_len + 1))))
 		return (NULL);
 	p_top = p;
 	s1_top = s1;
