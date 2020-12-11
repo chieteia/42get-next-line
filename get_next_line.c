@@ -6,7 +6,7 @@
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 12:56:30 by ntoshihi          #+#    #+#             */
-/*   Updated: 2020/12/11 23:02:21 by ntoshihi         ###   ########.fr       */
+/*   Updated: 2020/12/11 23:53:36 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ char	*add_stock_to_line(char *line, char *s)
 		len++;
 		s++;
 	}
-	free(line);
 	line = ft_substr(tmp, 0, len);
 	return (line);
 }
