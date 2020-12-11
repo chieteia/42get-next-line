@@ -6,7 +6,7 @@
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 12:57:01 by ntoshihi          #+#    #+#             */
-/*   Updated: 2020/11/15 17:07:28 by ntoshihi         ###   ########.fr       */
+/*   Updated: 2020/12/11 23:02:57 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,26 +17,14 @@ size_t	ft_strlen(const char *s)
 	size_t len;
 
 	len = 0;
+	if (!s)
+		return (0);
 	while (*s)
 	{
 		len++;
 		s++;
 	}
 	return (len);
-}
-
-char	*ft_strdup(const char *s)
-{
-	char *p;
-	char *ans;
-
-	if (!(p = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1))))
-		return (NULL);
-	ans = p;
-	while (*s)
-		*p++ = *s++;
-	*p = '\0';
-	return (ans);
 }
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
@@ -64,43 +52,43 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (p);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
-	int		i;
-	int		j;
-	size_t	size;
 	char	*p;
+	char	*p_top;
+	char	*s1_top;
 
-	i = 0;
-	j = 0;
-	if (!s1 || !s2)
+	if (!s1 && !s2)
 		return (NULL);
-	size = ft_strlen(s1) + ft_strlen(s2);
-	if (!(p = (char *)malloc(sizeof(char) * size + 1)))
+	if (!(p = (char *)malloc(sizeof(char)*(ft_strlen(s1) + ft_strlen(s2) + 1))))
 		return (NULL);
-	while (s1[i] != '\0')
-	{
-		p[i] = s1[i];
-		i++;
-	}
-	while (s2[j] != '\0')
-	{
-		p[i + j] = s2[j];
-		j++;
-	}
-	p[i + j] = '\0';
-	return (p);
+	p_top = p;
+	s1_top = s1;
+	while (s1 && *s1)
+		*p++ = *s1++;
+	while (s2 && *s2)
+		*p++ = *s2++;
+	*p = '\0';
+	free(s1_top);
+	return (p_top);
 }
 
 int		find_newline(char *s)
 {
 	if (!s)
-		return (0);
+		return (1);
 	while (*s)
 	{
 		if (*s == '\n')
-			return (1);
+			return (0);
 		s++;
 	}
-	return (0);
+	return (1);
+}
+
+int		all_free(char *stock, char *buff)
+{
+	free(stock);
+	free(buff);
+	return (-1);
 }

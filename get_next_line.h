@@ -6,7 +6,7 @@
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 12:56:58 by ntoshihi          #+#    #+#             */
-/*   Updated: 2020/11/15 17:07:43 by ntoshihi         ###   ########.fr       */
+/*   Updated: 2020/12/11 23:02:32 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@
 
 int		get_next_line(int fd, char **line);
 size_t	ft_strlen(const char *s);
-char	*ft_strdup(const char *s);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin(char *s1, char *s2);
 int		find_newline(char *s);
 char	*skip_to_newline(char *s);
-int		add_keep_to_line(char **line, char *s, ssize_t read_len);
+char	*add_stock_to_line(char *line, char *s);
+int		all_free(char *stock, char *buff);
 
 #endif
