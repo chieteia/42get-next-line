@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/03 12:56:58 by ntoshihi          #+#    #+#             */
-/*   Updated: 2020/12/15 03:32:29 by ntoshihi         ###   ########.fr       */
+/*   Created: 2020/12/26 15:48:54 by ntoshihi          #+#    #+#             */
+/*   Updated: 2020/12/26 15:53:38 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <unistd.h>
 # include <stdlib.h>
+# include <stdio.h>
 
 typedef struct	s_list
 {
@@ -23,14 +24,15 @@ typedef struct	s_list
 	struct s_list	*next;
 }				t_list;
 
-int		get_next_line(int fd, char **line);
-size_t	ft_strlen(const char *s);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-char	*ft_strjoin(char *s1, char *s2);
-int		find_newline(char *s);
-char	*skip_to_newline(char *s);
-char	*add_stock_to_line(char *line, char *s);
-int		all_free(t_list *lists, char *buff);
-t_list	*find_list(int fd, t_list *lists);
+int				get_next_line(int fd, char **line);
+size_t			ft_strlen(const char *s);
+char			*ft_substr(char const *s, unsigned int start, size_t len);
+char			*ft_strjoin(char *s1, char *s2);
+int				ft_find_newline(char *s);
+char			*ft_skip_to_newline(char *s);
+char			*ft_free_and_get_line(char *line, char *s, char *buff);
+int				ft_all_free(t_list *lists, char *buff);
+t_list			*ft_make_lists(t_list *lists, int fd);
+t_list			*ft_find_list(t_list *lists, int fd);
 
 #endif

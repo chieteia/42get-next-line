@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/03 12:57:01 by ntoshihi          #+#    #+#             */
-/*   Updated: 2020/12/15 03:32:37 by ntoshihi         ###   ########.fr       */
+/*   Created: 2020/12/26 15:48:48 by ntoshihi          #+#    #+#             */
+/*   Updated: 2020/12/26 15:52:05 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (p_top);
 }
 
-int		find_newline(char *s)
+int		ft_find_newline(char *s)
 {
 	if (!s)
 		return (1);
@@ -88,7 +88,7 @@ int		find_newline(char *s)
 	return (1);
 }
 
-int		all_free(t_list *lists, char *buff)
+int		ft_all_free(t_list *lists, char *buff)
 {
 	t_list *tmp;
 
@@ -96,6 +96,7 @@ int		all_free(t_list *lists, char *buff)
 	{
 		tmp = lists;
 		lists = lists->next;
+		free(tmp->text);
 		free(tmp);
 	}
 	free(buff);

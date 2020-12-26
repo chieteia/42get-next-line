@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/03 12:56:30 by ntoshihi          #+#    #+#             */
-/*   Updated: 2020/12/15 03:32:11 by ntoshihi         ###   ########.fr       */
+/*   Created: 2020/12/26 15:48:59 by ntoshihi          #+#    #+#             */
+/*   Updated: 2020/12/26 15:49:01 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-char	*skip_to_newline(char *s)
+char	*ft_skip_to_newline(char *s)
 {
 	char *tmp;
 
@@ -26,11 +26,13 @@ char	*skip_to_newline(char *s)
 	return (s);
 }
 
-char	*add_stock_to_line(char *line, char *s)
+char	*ft_free_and_get_line(char *line, char *s, char *buff)
 {
 	char	*tmp;
 	size_t	len;
 
+	free(buff);
+	buff = NULL;
 	len = 0;
 	tmp = s;
 	while (*s != '\n' && *s)
@@ -42,7 +44,7 @@ char	*add_stock_to_line(char *line, char *s)
 	return (line);
 }
 
-t_list	*find_list(int fd, t_list *lists)
+t_list	*ft_find_list(t_list *lists, int fd)
 {
 	while (lists)
 	{
@@ -50,36 +52,63 @@ t_list	*find_list(int fd, t_list *lists)
 			return (lists);
 		lists = lists->next;
 	}
-	lists = (t_list *)malloc(sizeof(t_list));
-	lists->fd = fd;
-	lists->text = NULL;
-	lists->next = NULL;
-	return (lists);
+	return (NULL);
+}
+
+t_list	*ft_make_lists(t_list *lists, int fd)
+{
+	t_list *new;
+	t_list *head;
+
+	if (!lists)
+	{
+		if (!(new = (t_list *)malloc(sizeof(t_list))))
+			return (NULL);
+		new->fd = fd;
+		new->text = NULL;
+		new->next = NULL;
+		return (new);
+	}
+	head = lists;
+	while (lists->fd != fd && lists->next)
+		lists = lists->next;
+	if (lists->fd != fd)
+	{
+		if (!(new = (t_list *)malloc(sizeof(t_list))))
+			return (NULL);
+		new->fd = fd;
+		new->text = NULL;
+		new->next = NULL;
+		lists->next = new;
+	}
+	return (head);
 }
 
 int		get_next_line(int fd, char **line)
 {
 	static	t_list	*lists;
-	t_list			*list;
+	t_list			*tmp;
 	char			*buff;
 	ssize_t			read_len;
 
 	read_len = 1;
-	if (fd < 0 || !line || BUFFER_SIZE <= 0)
+	if (fd < 0 || !line || BUFFER_SIZE <= 0
+		|| !(buff = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
 		return (-1);
-	if (!(buff = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
-		return (-1);
-	list = find_list(fd, lists);
-	while ((read_len > 0) && find_newline(list->text))
+	if (!(lists = ft_make_lists(lists, fd)))
+		return (ft_all_free(lists, buff));
+	if (!(tmp = ft_find_list(lists, fd)))
+		return (ft_all_free(lists, buff));
+	while ((read_len > 0) && ft_find_newline(tmp->text))
 	{
 		if ((read_len = read(fd, buff, BUFFER_SIZE)) == -1)
-			return (all_free(lists, buff));
+			return (ft_all_free(lists, buff));
 		buff[read_len] = '\0';
-		if ((list->text = ft_strjoin(list->text, buff)) == NULL)
-			return (all_free(lists, buff));
+		if ((tmp->text = ft_strjoin(tmp->text, buff)) == NULL)
+			return (ft_all_free(lists, buff));
 	}
-	free(buff);
-	*line = add_stock_to_line(*line, list->text);
-	list->text = skip_to_newline(list->text);
+	if ((*line = ft_free_and_get_line(*line, tmp->text, buff)) == NULL
+		|| (tmp->text = ft_skip_to_newline(tmp->text)) == NULL)
+		return (ft_all_free(lists, buff));
 	return (read_len == 0 ? 0 : 1);
 }
