@@ -6,7 +6,7 @@
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/26 15:48:54 by ntoshihi          #+#    #+#             */
-/*   Updated: 2020/12/26 15:53:38 by ntoshihi         ###   ########.fr       */
+/*   Updated: 2020/12/30 08:18:37 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ size_t			ft_strlen(const char *s);
 char			*ft_substr(char const *s, unsigned int start, size_t len);
 char			*ft_strjoin(char *s1, char *s2);
 int				ft_find_newline(char *s);
-char			*ft_skip_to_newline(char *s);
-char			*ft_free_and_get_line(char *line, char *s, char *buff);
-int				ft_all_free(t_list *lists, char *buff);
-t_list			*ft_make_lists(t_list *lists, int fd);
-t_list			*ft_find_list(t_list *lists, int fd);
+int				ft_skip_to_newline(t_list **head, t_list **tmp);
+char			*ft_free_and_get_line(char *line, char *s, char **buff);
+int				ft_all_free(t_list *lists, char **buff);
+t_list			*ft_make_lists(t_list **lists, int fd);
+void			ft_rm_node(t_list **head, t_list *tmp);
 
 #endif

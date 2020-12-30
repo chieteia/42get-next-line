@@ -6,7 +6,7 @@
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/26 15:48:48 by ntoshihi          #+#    #+#             */
-/*   Updated: 2020/12/26 15:52:05 by ntoshihi         ###   ########.fr       */
+/*   Updated: 2020/12/30 06:46:48 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int		ft_find_newline(char *s)
 	return (1);
 }
 
-int		ft_all_free(t_list *lists, char *buff)
+int		ft_all_free(t_list *lists, char **buff)
 {
 	t_list *tmp;
 
@@ -99,6 +99,6 @@ int		ft_all_free(t_list *lists, char *buff)
 		free(tmp->text);
 		free(tmp);
 	}
-	free(buff);
+	free(*buff);
 	return (-1);
 }

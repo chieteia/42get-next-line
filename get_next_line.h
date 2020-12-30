@@ -6,7 +6,7 @@
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/26 16:10:48 by ntoshihi          #+#    #+#             */
-/*   Updated: 2020/12/26 16:10:49 by ntoshihi         ###   ########.fr       */
+/*   Updated: 2020/12/30 06:13:45 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ char	*ft_strjoin(char *s1, char *s2);
 int		find_newline(char *s);
 char	*skip_to_newline(char *s);
 char	*add_stock_to_line(char *line, char *s);
-int		all_free(char *stock, char *buff);
+int		all_free(char **stock, char **buff);
+void	safe_free(char **p);
 
 #endif

@@ -6,33 +6,65 @@
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/26 15:48:59 by ntoshihi          #+#    #+#             */
-/*   Updated: 2020/12/26 15:49:01 by ntoshihi         ###   ########.fr       */
+/*   Updated: 2020/12/30 08:47:21 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-char	*ft_skip_to_newline(char *s)
+void	ft_rm_node(t_list **head, t_list *tmp)
 {
-	char *tmp;
+	t_list *start;
+	t_list *alt;
 
-	tmp = s;
-	while (*s != '\n' && *s)
-		s++;
-	if (*s == '\n')
-		s++;
-	s = ft_substr(s, 0, ft_strlen(s));
-	free(tmp);
-	return (s);
+	start = (*head);
+	if ((*head)->fd == tmp->fd)
+	{
+		(*head) = (*head)->next;
+		free(start->text);
+		start->text = NULL;
+		free(start);
+		return ;
+	}
+	while ((*head)->next->fd != tmp->fd)
+		(*head) = (*head)->next;
+	alt = (*head)->next;
+	(*head)->next = (*head)->next->next;
+	free(alt->text);
+	alt->text = NULL;
+	free(alt);
+	(*head) = start;
 }
 
-char	*ft_free_and_get_line(char *line, char *s, char *buff)
+int		ft_skip_to_newline(t_list **head, t_list **tmp)
+{
+	char *alt;
+	char *s;
+
+	alt = (*tmp)->text;
+	s = (*tmp)->text;
+	while (*s != '\n' && *s)
+		s++;
+	if (*s)
+	{
+		s++;
+		if (!((*tmp)->text = ft_substr(s, 0, ft_strlen(s))))
+			return (-1);
+		free(alt);
+		alt = NULL;
+	}
+	else
+		ft_rm_node(head, *tmp);
+	return (1);
+}
+
+char	*ft_free_and_get_line(char *line, char *s, char **buff)
 {
 	char	*tmp;
 	size_t	len;
 
-	free(buff);
-	buff = NULL;
+	free(*buff);
+	*buff = NULL;
 	len = 0;
 	tmp = s;
 	while (*s != '\n' && *s)
@@ -44,44 +76,30 @@ char	*ft_free_and_get_line(char *line, char *s, char *buff)
 	return (line);
 }
 
-t_list	*ft_find_list(t_list *lists, int fd)
+t_list	*ft_make_lists(t_list **lists, int fd)
 {
-	while (lists)
-	{
-		if (lists->fd == fd)
-			return (lists);
-		lists = lists->next;
-	}
-	return (NULL);
-}
-
-t_list	*ft_make_lists(t_list *lists, int fd)
-{
-	t_list *new;
 	t_list *head;
+	t_list *res;
 
-	if (!lists)
+	if (!(*lists))
 	{
-		if (!(new = (t_list *)malloc(sizeof(t_list))))
+		if (!((*lists) = (t_list *)malloc(sizeof(t_list))))
 			return (NULL);
-		new->fd = fd;
-		new->text = NULL;
-		new->next = NULL;
-		return (new);
+		(**lists) = (t_list){.text = NULL, .fd = fd, .next = NULL};
 	}
-	head = lists;
-	while (lists->fd != fd && lists->next)
-		lists = lists->next;
-	if (lists->fd != fd)
+	head = (*lists);
+	while ((*lists)->fd != fd && (*lists)->next)
+		(*lists) = (*lists)->next;
+	if ((*lists)->fd != fd)
 	{
-		if (!(new = (t_list *)malloc(sizeof(t_list))))
+		if (!(res = (t_list *)malloc(sizeof(t_list))))
 			return (NULL);
-		new->fd = fd;
-		new->text = NULL;
-		new->next = NULL;
-		lists->next = new;
+		*res = (t_list){.text = NULL, .fd = fd, .next = NULL};
+		(*lists)->next = res;
+		(*lists) = head;
+		return (res);
 	}
-	return (head);
+	return ((*lists));
 }
 
 int		get_next_line(int fd, char **line)
@@ -95,20 +113,18 @@ int		get_next_line(int fd, char **line)
 	if (fd < 0 || !line || BUFFER_SIZE <= 0
 		|| !(buff = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
 		return (-1);
-	if (!(lists = ft_make_lists(lists, fd)))
-		return (ft_all_free(lists, buff));
-	if (!(tmp = ft_find_list(lists, fd)))
-		return (ft_all_free(lists, buff));
+	if (!(tmp = ft_make_lists(&lists, fd)))
+		return (ft_all_free(lists, &buff));
 	while ((read_len > 0) && ft_find_newline(tmp->text))
 	{
 		if ((read_len = read(fd, buff, BUFFER_SIZE)) == -1)
-			return (ft_all_free(lists, buff));
+			return (ft_all_free(lists, &buff));
 		buff[read_len] = '\0';
 		if ((tmp->text = ft_strjoin(tmp->text, buff)) == NULL)
-			return (ft_all_free(lists, buff));
+			return (ft_all_free(lists, &buff));
 	}
-	if ((*line = ft_free_and_get_line(*line, tmp->text, buff)) == NULL
-		|| (tmp->text = ft_skip_to_newline(tmp->text)) == NULL)
-		return (ft_all_free(lists, buff));
+	if ((*line = ft_free_and_get_line(*line, tmp->text, &buff)) == NULL
+		|| (ft_skip_to_newline(&lists, &tmp) == -1))
+		return (ft_all_free(lists, &buff));
 	return (read_len == 0 ? 0 : 1);
 }

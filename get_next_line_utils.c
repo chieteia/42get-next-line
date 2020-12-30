@@ -6,7 +6,7 @@
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/26 16:11:03 by ntoshihi          #+#    #+#             */
-/*   Updated: 2020/12/26 16:11:04 by ntoshihi         ###   ########.fr       */
+/*   Updated: 2020/12/30 06:13:39 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,9 @@ int		find_newline(char *s)
 	return (1);
 }
 
-int		all_free(char *stock, char *buff)
+int		all_free(char **stock, char **buff)
 {
-	free(stock);
-	free(buff);
+	safe_free(stock);
+	safe_free(buff);
 	return (-1);
 }
