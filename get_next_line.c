@@ -6,25 +6,96 @@
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/26 16:10:40 by ntoshihi          #+#    #+#             */
-/*   Updated: 2020/12/30 06:15:30 by ntoshihi         ###   ########.fr       */
+/*   Updated: 2021/04/24 09:39:55 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include "stdio.h"
 
-void	safe_free(char **p)
+int	make_line_and_set_stock(char **line, char **buff, char **stock)
 {
-	if (*p != NULL)
+	char	*tmp;
+	size_t	len;
+
+	len = 0;
+	tmp = *stock;
+	while (*tmp != '\n' && *tmp)
 	{
-		free(*p);
-		*p = NULL;
+		len++;
+		tmp++;
 	}
+	*line = ft_substr(*stock, 0, len);
+	if (*tmp == '\n')
+		tmp++;
+	tmp = ft_substr(tmp, 0, ft_strlen(tmp));
+	safe_free(stock);
+	*stock = tmp;
+	if (!line || !stock)
+	{
+		safe_free(buff);
+		safe_free(stock);
+		return (FAILED);
+	}
+	return (OK);
 }
 
+int	make_buff(int fd, ssize_t *read_len, char **buff, char **stock)
+{
+	*read_len = read(fd, *buff, BUFFER_SIZE);
+	if (*read_len == -1)
+	{
+		safe_free(buff);
+		safe_free(stock);
+		return (FAILED);
+	}
+	*buff[(*read_len)] = '\0';
+	return (OK);
+}
+
+int	make_stock(char **buff, char **stock)
+{
+	*stock = ft_strjoin(*stock, *buff);
+	if (*stock == NULL)
+	{
+		safe_free(buff);
+		safe_free(stock);
+		return (FAILED);
+	}
+	return (OK);
+}
+
+int	get_next_line(int fd, char **line)
+{
+	static char	*stock;
+	char		*buff;
+	ssize_t		read_len;
+
+	read_len = 1;
+	if (fd < 0 || !line || BUFFER_SIZE <= 0)
+		return (-1);
+	buff = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buff)
+		return (-1);
+	while ((read_len > 0) && find_newline(stock))
+	{
+		if (make_buff(fd, &read_len, &buff, &stock) == FAILED)
+			return (-1);
+		if (make_stock(&buff, &stock) == FAILED)
+			return (-1);
+	}
+	if (make_line_and_set_stock(line, &buff, &stock) == FAILED)
+		return (-1);
+	if (read_len == 0)
+		safe_free(&stock);
+	safe_free(&buff);
+	return (!!read_len);
+}
+
+/*
 char	*skip_to_newline(char *s)
 {
-	char *tmp;
+	char	*tmp;
 
 	tmp = s;
 	while (*s != '\n' && *s)
@@ -52,30 +123,31 @@ char	*add_stock_to_line(char *line, char *s)
 	return (line);
 }
 
-int		get_next_line(int fd, char **line)
+int make_line_and_set_stock(char **line, char **stock)
 {
-	static	char	*stock;
-	char			*buff;
-	ssize_t			read_len;
+	char	*tmp;
+	size_t	len;
 
-	read_len = 1;
-	if (fd < 0 || !line || BUFFER_SIZE <= 0)
-		return (-1);
-	if (!(buff = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
-		return (-1);
-	while ((read_len > 0) && find_newline(stock))
+	len = 0;
+	tmp = *stock;
+	while (*tmp != '\n' && *tmp)
 	{
-		if ((read_len = read(fd, buff, BUFFER_SIZE)) == -1)
-			return (all_free(&stock, &buff));
-		buff[read_len] = '\0';
-		if ((stock = ft_strjoin(stock, buff)) == NULL)
-			return (all_free(&stock, &buff));
+		len++;
+		tmp++;
 	}
-	safe_free(&buff);
-	*line = add_stock_to_line(*line, stock);
-	stock = skip_to_newline(stock);
-	if (read_len == 0)
-		safe_free(&stock);
-	return (read_len == 0 ? 0 : 1);
+	line = ft_substr(*stock, 0, len);
+	if (*tmp == '\n')
+		tmp++;
+	tmp = ft_substr(tmp, 0, ft_strlen(tmp));
+	safe_free(stock);
+	*stock = tmp;
+	if (!line || !stock)
+	{
+		safe_free(buff);
+		safe_free(stock);
+		return (FAILED);
+	}
+	return (OK);
 }
-//readの長さが0　&& 改行なし
+
+*/

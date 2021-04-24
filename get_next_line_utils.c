@@ -6,7 +6,7 @@
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/26 16:11:03 by ntoshihi          #+#    #+#             */
-/*   Updated: 2020/12/30 06:13:39 by ntoshihi         ###   ########.fr       */
+/*   Updated: 2021/04/24 08:10:20 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 size_t	ft_strlen(const char *s)
 {
-	size_t len;
+	size_t	len;
 
 	len = 0;
 	if (!s)
@@ -37,7 +37,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	j = 0;
 	if (!s)
 		return (NULL);
-	if (!(p = (char *)malloc(sizeof(char) * (len + 1))))
+	p = (char *)malloc(sizeof(char) * (len + 1));
+	if (!p)
 		return (NULL);
 	while (s[i])
 	{
@@ -62,7 +63,8 @@ char	*ft_strjoin(char *s1, char *s2)
 	if (!s1 && !s2)
 		return (NULL);
 	total_len = ft_strlen(s1) + ft_strlen(s2);
-	if (!(p = (char *)malloc(sizeof(char) * (total_len + 1))))
+	p = (char *)malloc(sizeof(char) * (total_len + 1));
+	if (!p)
 		return (NULL);
 	p_top = p;
 	s1_top = s1;
@@ -75,7 +77,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (p_top);
 }
 
-int		find_newline(char *s)
+int	find_newline(char *s)
 {
 	if (!s)
 		return (1);
@@ -88,9 +90,11 @@ int		find_newline(char *s)
 	return (1);
 }
 
-int		all_free(char **stock, char **buff)
+void	safe_free(char **p)
 {
-	safe_free(stock);
-	safe_free(buff);
-	return (-1);
+	if (*p != NULL)
+	{
+		free(*p);
+		*p = NULL;
+	}
 }
