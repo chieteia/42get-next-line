@@ -6,7 +6,7 @@
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/26 16:10:40 by ntoshihi          #+#    #+#             */
-/*   Updated: 2021/04/24 09:39:55 by ntoshihi         ###   ########.fr       */
+/*   Updated: 2021/04/24 11:11:49 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	make_buff(int fd, ssize_t *read_len, char **buff, char **stock)
 		safe_free(stock);
 		return (FAILED);
 	}
-	*buff[(*read_len)] = '\0';
+	(*buff)[*read_len] = '\0';
 	return (OK);
 }
 
@@ -91,63 +91,3 @@ int	get_next_line(int fd, char **line)
 	safe_free(&buff);
 	return (!!read_len);
 }
-
-/*
-char	*skip_to_newline(char *s)
-{
-	char	*tmp;
-
-	tmp = s;
-	while (*s != '\n' && *s)
-		s++;
-	if (*s == '\n')
-		s++;
-	s = ft_substr(s, 0, ft_strlen(s));
-	free(tmp);
-	return (s);
-}
-
-char	*add_stock_to_line(char *line, char *s)
-{
-	char	*tmp;
-	size_t	len;
-
-	len = 0;
-	tmp = s;
-	while (*s != '\n' && *s)
-	{
-		len++;
-		s++;
-	}
-	line = ft_substr(tmp, 0, len);
-	return (line);
-}
-
-int make_line_and_set_stock(char **line, char **stock)
-{
-	char	*tmp;
-	size_t	len;
-
-	len = 0;
-	tmp = *stock;
-	while (*tmp != '\n' && *tmp)
-	{
-		len++;
-		tmp++;
-	}
-	line = ft_substr(*stock, 0, len);
-	if (*tmp == '\n')
-		tmp++;
-	tmp = ft_substr(tmp, 0, ft_strlen(tmp));
-	safe_free(stock);
-	*stock = tmp;
-	if (!line || !stock)
-	{
-		safe_free(buff);
-		safe_free(stock);
-		return (FAILED);
-	}
-	return (OK);
-}
-
-*/
